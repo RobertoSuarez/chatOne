@@ -7,8 +7,10 @@ import (
 
 func init() {
     beego.Router("/", &controllers.MainController{})
-	ns := beego.NewNamespace("/websocket",
-		beego.NSInclude(&controllers.ChatController{}),
+	ns := beego.NewNamespace("/v1",
+		beego.NSInclude(
+			&controllers.ChatController{},
+			&controllers.UserController{}),
 	)
 	beego.AddNamespace(ns)
 }

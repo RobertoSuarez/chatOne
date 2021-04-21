@@ -16,7 +16,7 @@ type ChatController struct {
 }
 
 // ejemplo localhost:8080/websocket?nombre=sdf
-// @router / [get]
+// @router /websocket [get]
 func (c *ChatController) Get() {
 	nombre := c.GetString("nombre")
 
@@ -45,7 +45,7 @@ func (c *ChatController) Get() {
 		}
 		logs.Info("Mensage: ", string(msg))
 
-		for i, _ := range models.Usuarios {
+		for i := range models.Usuarios {
 			if models.Usuarios[i].Conn == nil {
 				continue
 			}
@@ -55,13 +55,5 @@ func (c *ChatController) Get() {
 				delete(models.Usuarios, i)
 			}
 		}
-
 	}
-
-}
-
-// @router /users	[get]
-func (c *ChatController) AllUser() {
-	c.Data["json"] = models.Usuarios
-	c.ServeJSON()
 }
