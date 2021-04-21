@@ -19,7 +19,7 @@ func init() {
 type Usuario struct {
 	Id	string
 	Nombre	string
-	conn	*websocket.Conn
+	Conn	*websocket.Conn
 }
 
 func NewUsuario(nombre string, conn *websocket.Conn) Usuario {

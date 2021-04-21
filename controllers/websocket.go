@@ -45,11 +45,17 @@ func (c *ChatController) Get() {
 		}
 		logs.Info("Mensage: ", string(msg))
 
-		err = conn.WriteMessage(metype, msg)
-		if err != nil {
-			logs.Error("Error: ", err)
-			break
+		for i, _ := range models.Usuarios {
+			if models.Usuarios[i].Conn == nil {
+				continue
+			}
+			err = models.Usuarios[i].Conn.WriteMessage(metype, msg)
+			if err != nil {
+				logs.Error("Error: ", err)
+				delete(models.Usuarios, i)
+			}
 		}
+
 	}
 
 }
