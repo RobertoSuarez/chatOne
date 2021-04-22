@@ -16,28 +16,37 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["chatOne/controllers:UserController"] = append(beego.GlobalControllerRouter["chatOne/controllers:UserController"],
+    beego.GlobalControllerRouter["chatOne/controllers:ContactController"] = append(beego.GlobalControllerRouter["chatOne/controllers:ContactController"],
         beego.ControllerComments{
-            Method: "Login",
+            Method: "Get",
+            Router: "/",
+            AllowHTTPMethods: []string{"get"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["chatOne/controllers:LoginController"] = append(beego.GlobalControllerRouter["chatOne/controllers:LoginController"],
+        beego.ControllerComments{
+            Method: "Page",
+            Router: "/login",
+            AllowHTTPMethods: []string{"get"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["chatOne/controllers:LoginController"] = append(beego.GlobalControllerRouter["chatOne/controllers:LoginController"],
+        beego.ControllerComments{
+            Method: "IniciarSession",
             Router: "/login",
             AllowHTTPMethods: []string{"post"},
             MethodParams: param.Make(),
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["chatOne/controllers:UserController"] = append(beego.GlobalControllerRouter["chatOne/controllers:UserController"],
+    beego.GlobalControllerRouter["chatOne/controllers:LoginController"] = append(beego.GlobalControllerRouter["chatOne/controllers:LoginController"],
         beego.ControllerComments{
-            Method: "Registrar",
-            Router: "/user",
-            AllowHTTPMethods: []string{"post"},
-            MethodParams: param.Make(),
-            Filters: nil,
-            Params: nil})
-
-    beego.GlobalControllerRouter["chatOne/controllers:UserController"] = append(beego.GlobalControllerRouter["chatOne/controllers:UserController"],
-        beego.ControllerComments{
-            Method: "GetPage",
-            Router: "/user",
+            Method: "Logout",
+            Router: "/logout",
             AllowHTTPMethods: []string{"get"},
             MethodParams: param.Make(),
             Filters: nil,
@@ -45,8 +54,8 @@ func init() {
 
     beego.GlobalControllerRouter["chatOne/controllers:UserController"] = append(beego.GlobalControllerRouter["chatOne/controllers:UserController"],
         beego.ControllerComments{
-            Method: "AllUser",
-            Router: "/users",
+            Method: "UserOne",
+            Router: "/",
             AllowHTTPMethods: []string{"get"},
             MethodParams: param.Make(),
             Filters: nil,
