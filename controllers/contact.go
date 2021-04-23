@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"fmt"
-
 	"github.com/beego/beego/v2/server/web"
 )
 
@@ -11,16 +9,32 @@ type ContactController struct {
 	web.Controller
 }
 
-// Muestra la pagina con todos los contactos
-func (c *ContactController) Contacts() {
-	// envia los contato en json
-	iduser := c.GetString(":iduser")
-	idcontact := c.GetString(":idcontact")
-	c.Ctx.WriteString(fmt.Sprintln("iduser: ", iduser, " idcontact: ", idcontact))
-}
-
-
-func (c *ContactController) AllContact() {
+// @router / [get]
+func (c *ContactController) AllContacts() {
 	c.Data["json"] = "Todos los contactos de " + c.GetString(":iduser")
 	c.ServeJSON()
+}
+
+// @router / [post]
+func (c *ContactController) CreateContact() {
+	iduser := c.GetString(":iduser")
+	_ = iduser
+}
+
+// @router /:idcontact [get]
+func (c *ContactController) OneContact() {
+	iduser := c.GetString(":iduser")
+	_ = iduser
+}
+
+// @router /:idcontact [delete]
+func (c *ContactController) DeleteContact() {
+	iduser := c.GetString(":iduser")
+	_ = iduser
+}
+
+// @router /:idcontact [put]
+func (c *ContactController) UpdateContact() {
+	iduser := c.GetString(":iduser")
+	_ = iduser
 }

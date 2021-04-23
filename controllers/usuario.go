@@ -16,20 +16,19 @@ type UserController struct {
 // @router / [get]
 func (u *UserController) UserOne() {
 	iduser := u.GetString(":iduser")
-	logs.Info("iduser: ", iduser)
-	u.Ctx.WriteString(iduser)
+	u.Ctx.WriteString("Usuario: " + iduser)
 }
 
-// @router / [post]
-func (u *UserController) Register() {
+// @router / [put]
+func (u *UserController) UpdateUser() {
 	iduser := u.GetString(":iduser")
-
-	u.Ctx.WriteString(string(u.Ctx.Input.RequestBody) + iduser)
+	u.Ctx.WriteString("Usuario actualizado: " + iduser)
 }
 
-func (u *UserController) AllUser() {
-	u.Data["json"] = models.Usuarios
-	u.ServeJSON()
+// @router / [delete]
+func (u *UserController) DeleteUser() {
+	iduser := u.GetString(":iduser")
+	u.Ctx.WriteString("Usuario Eliminado: " + iduser)
 }
 
 // retorna pagina html para ver el perfil del usuario
@@ -52,4 +51,10 @@ func (u *UserController) CreateUser() {
 	u.Data["json"] = "Usuario creado correctamente"
 	u.ServeJSON()
 
+}
+
+
+func (u *UserController) AllUser() {
+	u.Data["json"] = models.Usuarios
+	u.ServeJSON()
 }

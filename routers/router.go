@@ -20,7 +20,7 @@ func init() {
 
 		beego.NSNamespace("/:iduser",
 			beego.NSRouter("/", &controllers.UserController{}, "get:Usuario"),
-			beego.NSRouter("/contacts", &controllers.ContactController{}, "get:Contacts"),
+			//beego.NSRouter("/contacts", &controllers.ContactController{}, "get:Contacts"),
 		),
 	)
 
@@ -31,19 +31,19 @@ func init() {
 		//beego.NSInclude(&controllers.LoginController{}),
 		beego.NSInclude(&controllers.LoginController{}),
 
-		beego.NSRouter("/users", &controllers.UserController{}, "get:AllUser;post:CreateUser"),
+		beego.NSNamespace("/users",
+			beego.NSRouter("/", &controllers.UserController{}, "get:AllUser;post:CreateUser"),
 
-		beego.NSNamespace("/user/:iduser",
-			beego.NSInclude(
-				&controllers.UserController{},
+			beego.NSNamespace("/:iduser",
+				beego.NSInclude(&controllers.UserController{}),// Read, Put, Delete User
+
+				beego.NSNamespace("/contacts",
+					beego.NSInclude(&controllers.ContactController{}), // Controlamos todos los contactos
+				),
 			),
 
-			// toda la coleccion de contactos del usuario
-			beego.NSRouter("/contacts", &controllers.ContactController{}, "get:AllContact"),
 
-			beego.NSNamespace("/contact/:idcontact",
-				beego.NSInclude(&controllers.ContactController{}),
-			),
+
 		),
 
 		// ws
