@@ -10,13 +10,28 @@ import (
 
 func init() {
     beego.Router("/", &controllers.MainController{})
-	// Restringido por las cookies
-	ns := beego.NewNamespace("/v1",
 
-		beego.NSBefore(controllers.FiltrarUsuario),	// filtro para los usuarios
+	// Controlamos el inicio de session
+	//beego.Router("/login", &controllers.LoginController{}, "get:Page;post:IniciarSession")
+	//beego.Router("/logout", &controllers.LoginController{}, "*:Logout")
+
+	userWeb := beego.NewNamespace("/user",
+		beego.NSBefore(controllers.FiltrarUsuario), // filtro para los usuarios
+
+		beego.NSNamespace("/:iduser",
+			beego.NSRouter("/", &controllers.UserController{}, "get:Usuario"),
+			beego.NSRouter("/contacts", &controllers.ContactController{}, "get:Contacts"),
+		),
+	)
+
+	// Restringido por las cookies
+	api := beego.NewNamespace("/api/v1",
+
+		//beego.NSBefore(controllers.FiltrarUsuario),	// filtro para los usuarios
+		//beego.NSInclude(&controllers.LoginController{}),
 		beego.NSInclude(&controllers.LoginController{}),
 
-		beego.NSRouter("/users", &controllers.UserController{}, "get:AllUser"),
+		beego.NSRouter("/users", &controllers.UserController{}, "get:AllUser;post:CreateUser"),
 
 		beego.NSNamespace("/user/:iduser",
 			beego.NSInclude(
@@ -36,5 +51,5 @@ func init() {
 
 	)
 
-	beego.AddNamespace(ns)
+	beego.AddNamespace(api, userWeb)
 }

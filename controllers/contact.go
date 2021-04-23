@@ -11,12 +11,12 @@ type ContactController struct {
 	web.Controller
 }
 
-// @router / [get]
-func (c *ContactController) Get() {
+// Muestra la pagina con todos los contactos
+func (c *ContactController) Contacts() {
 	// envia los contato en json
 	iduser := c.GetString(":iduser")
 	idcontact := c.GetString(":idcontact")
-	c.Ctx.WriteString(fmt.Sprintln("iduser: ", iduser, "idcontact: ", idcontact))
+	c.Ctx.WriteString(fmt.Sprintln("iduser: ", iduser, " idcontact: ", idcontact))
 }
 
 
