@@ -42,7 +42,7 @@ func (l *LoginController) IniciarSession() {
 	// enviado del cliente
 	var authUser models.Usuario
 	connection.Where("email = ?", authDetails.Email).First(&authUser)
-
+	logs.Info("Login authUser: ", authUser)
 	if authUser.Email == "" {
 		l.Data["json"] = "usuario o contraseña incorrecto"
 		l.ServeJSON()

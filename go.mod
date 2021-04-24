@@ -11,4 +11,6 @@ require (
 	github.com/jinzhu/gorm v1.9.16
 	github.com/smartystreets/goconvey v1.6.4
 	golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b
+	gorm.io/driver/postgres v1.0.8 // indirect
+	gorm.io/driver/sqlite v1.1.4
 )
