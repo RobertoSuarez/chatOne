@@ -1,9 +1,8 @@
 package models
 
 import (
-	"github.com/beego/beego/v2/core/logs"
-	"github.com/google/uuid"
-	"github.com/gorilla/websocket"
+
+	"github.com/jinzhu/gorm"
 )
 
 var Usuarios map[string]*Usuario
@@ -14,26 +13,28 @@ func init() {
 	// Usuarios[id] = &Usuario{id, "Roberto", nil}
 }
 
-
 type Usuario struct {
-	Id		string
-	Nombre	string
-	Contraseña	string
-	Numero	string
-	Email	string
-	Conn	*websocket.Conn
+	gorm.Model
+	Name     string `json:"name"`
+	Password string `json:"password"`
+	Number   string `json:"number"`
+	Email    string `gorm:"unique" json:"email"`
+	Role	string `json:"role"`
 }
 
-func NewUsuario(nombre string, conn *websocket.Conn) Usuario {
-	id := uuid.New().String()
-	return Usuario{id, nombre, "", "", "", conn}
+type Authentication struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
-func (u *Usuario) Save() error {
-	if u.Id == "" {
-		u.Id = uuid.New().String()
-	}
-	logs.Info(u)
-	Usuarios[u.Id] = u
-	return nil
+type Token struct {
+	Role        string `json:"role"`
+	Email       string `json:"email"`
+	TokenString string `json:"token"`
 }
+
+type Error struct {
+	IsError bool 	`json:"isError"`
+	Message string `json:"message"`
+}
+

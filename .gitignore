@@ -2,3 +2,4 @@
 bin/
 chatOne
 *.tmp
+tmp/

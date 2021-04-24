@@ -6,7 +6,7 @@ import (
 
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
-
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserController struct {
@@ -38,19 +38,35 @@ func (u *UserController) Usuario() {
 }
 
 func (u *UserController) CreateUser() {
+	connection := models.GetDatabase()
+	defer models.CloseDatabase(connection)
+
 	var user models.Usuario
 	err := json.Unmarshal(u.Ctx.Input.RequestBody, &user)
 	if err != nil {
 		logs.Error(err.Error())
 		u.Data["json"] = err.Error()
 		u.ServeJSON()
+		return
 	}
 
-	user.Save()
+	var dbuser models.Usuario
+	connection.Where("email = ?", user.Email).First(&dbuser)
 
-	u.Data["json"] = "Usuario creado correctamente"
+	if dbuser.Email != "" {
+		u.Data["json"] = "Email ya existe"
+		u.ServeJSON()
+		return
+	}
+
+	//user.Password, err = GeneratePassword(user.Password)
+	psw, err := bcrypt.GenerateFromPassword([]byte(user.Password), 14)
+	user.Password = string(psw)
+
+	// insertamos el usuario
+	connection.Create(&user)
+	u.Data["json"] = user
 	u.ServeJSON()
-
 }
 
 

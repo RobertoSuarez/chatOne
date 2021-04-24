@@ -27,8 +27,8 @@ func init() {
 	// Restringido por las cookies
 	api := beego.NewNamespace("/api/v1",
 
-		//beego.NSBefore(controllers.FiltrarUsuario),	// filtro para los usuarios
-		//beego.NSInclude(&controllers.LoginController{}),
+		beego.NSBefore(controllers.IsAuthorized),	// filtro de token JWT
+
 		beego.NSInclude(&controllers.LoginController{}),
 
 		beego.NSNamespace("/users",
