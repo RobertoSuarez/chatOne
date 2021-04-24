@@ -16,7 +16,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 	portint, err := strconv.Atoi(port)
-	if err != nil {
+	if err == nil {
 		beego.BConfig.Listen.HTTPPort = portint
 		beego.BConfig.Listen.HTTPSPort = portint
 	}
