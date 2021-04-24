@@ -3,3 +3,4 @@ bin/
 chatOne
 *.tmp
 tmp/
+*.db

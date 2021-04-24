@@ -1,7 +1,6 @@
 package main
 
 import (
-	"chatOne/models"
 	_ "chatOne/routers"
 	"os"
 	"strconv"
@@ -21,7 +20,6 @@ func main() {
 		beego.BConfig.Listen.HTTPSPort = portint
 	}
 
-	models.InitMigration()
 	beego.Run()
 }
 

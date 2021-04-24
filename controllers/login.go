@@ -25,8 +25,7 @@ type LoginController struct {
 
 // @router /login [post]
 func (l *LoginController) IniciarSession() {
-	connection := models.GetDatabase()
-	defer models.CloseDatabase(connection)
+	db := models.GetDatabase()
 
 	// Las credenciales que envia el cliente
 	var authDetails models.Authentication
@@ -41,7 +40,7 @@ func (l *LoginController) IniciarSession() {
 	// Consultamos a la base de datos el usuario, por medio del email
 	// enviado del cliente
 	var authUser models.Usuario
-	connection.Where("email = ?", authDetails.Email).First(&authUser)
+	db.Where("email = ?", authDetails.Email).First(&authUser)
 	logs.Info("Login authUser: ", authUser)
 	if authUser.Email == "" {
 		l.Data["json"] = "usuario o contraseña incorrecto"

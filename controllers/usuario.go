@@ -38,8 +38,7 @@ func (u *UserController) Usuario() {
 }
 
 func (u *UserController) CreateUser() {
-	connection := models.GetDatabase()
-	defer models.CloseDatabase(connection)
+	db := models.GetDatabase()
 
 	var user models.Usuario
 	err := json.Unmarshal(u.Ctx.Input.RequestBody, &user)
@@ -51,7 +50,7 @@ func (u *UserController) CreateUser() {
 	}
 
 	var dbuser models.Usuario
-	connection.Where("email = ?", user.Email).First(&dbuser)
+	db.Where("email = ?", user.Email).First(&dbuser)
 	logs.Info("Create user dbuser ", user)
 	if dbuser.Email != "" {
 		u.Data["json"] = "Email ya existe"
@@ -64,7 +63,7 @@ func (u *UserController) CreateUser() {
 	user.Password = string(psw)
 
 	// insertamos el usuario
-	connection.Create(&user)
+	db.Create(&user)
 	u.Data["json"] = user
 	u.ServeJSON()
 }

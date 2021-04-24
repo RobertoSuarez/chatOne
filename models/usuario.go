@@ -1,8 +1,7 @@
 package models
 
 import (
-
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 var Usuarios map[string]*Usuario
