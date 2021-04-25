@@ -3,6 +3,7 @@ package controllers
 import (
 	"chatOne/models"
 	"encoding/json"
+	"strconv"
 
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
@@ -13,39 +14,73 @@ type UserController struct {
 	web.Controller
 }
 
-// @router / [get]
+// @router /:iduser [get]
 func (u *UserController) UserOne() {
 	iduser := u.GetString(":iduser")
 	var user models.Usuario
-	db := models.GetDatabase()
-	result := db.Where("id = ?", iduser).First(&user)
-	if result.Error != nil {
-		u.Data["json"] = models.SetError(true, result.Error.Error())
+
+	switch u.Ctx.Input.Header("Role") {
+	case "admin":
+		db := models.GetDatabase()
+		result := db.Where("id = ?", iduser).First(&user)
+		if result.Error != nil {
+			u.Data["json"] = models.SetError(true, result.Error.Error())
+			u.ServeJSON()
+		}
+		u.Data["json"] = user
+		u.ServeJSON()
+	case "user":
+		u.Data["json"] = models.SetError(true, "user no permitido")
 		u.ServeJSON()
 	}
 
-	u.Data["json"] = user
+}
+
+// @router /:iduser [put]
+func (u *UserController) UpdateUser() {
+	var user models.Usuario
+	iduser, err := strconv.Atoi(u.GetString(":iduser"))
+	if err != nil {
+		u.Data["json"] = models.SetError(true, err.Error())
+		u.ServeJSON()
+		return
+	}
+	user.ID = uint(iduser)
+	db := models.GetDatabase()
+	if err := json.Unmarshal(u.Ctx.Input.RequestBody, &user); err != nil {
+		u.Data["json"] = models.SetError(true, err.Error())
+		u.ServeJSON()
+		return
+	}
+
+	result := db.Model(&user).Omit("password").Updates(user)
+	if result.Error != nil {
+		u.Data["json"] = models.SetError(true, result.Error.Error())
+		u.ServeJSON()
+		return
+	}
+
+	u.Data["json"] = models.SetError(false, "Usuario actualizado")
+	u.ServeJSON()
+
+}
+
+// @router /:iduser [delete]
+func (u *UserController) DeleteUser() {
+	iduser := u.GetString(":iduser")
+	db := models.GetDatabase()
+	result := db.Delete(&models.Usuario{}, iduser)
+	if result.Error != nil {
+		u.Data["json"] = models.SetError(true, result.Error.Error())
+		u.ServeJSON()
+		return
+	}
+
+	u.Data["json"] = models.SetError(false, iduser + " Usuario eliminado")
 	u.ServeJSON()
 }
 
-// @router / [put]
-func (u *UserController) UpdateUser() {
-	iduser := u.GetString(":iduser")
-	u.Ctx.WriteString("Usuario actualizado: " + iduser)
-}
-
-// @router / [delete]
-func (u *UserController) DeleteUser() {
-	iduser := u.GetString(":iduser")
-	u.Ctx.WriteString("Usuario Eliminado: " + iduser)
-}
-
-// retorna pagina html para ver el perfil del usuario
-func (u *UserController) Usuario() {
-	iduser := u.GetString(":iduser")
-	u.Ctx.WriteString("Pagina de usuario " + iduser)
-}
-
+// @router / [post]
 func (u *UserController) CreateUser() {
 	db := models.GetDatabase()
 
@@ -77,7 +112,7 @@ func (u *UserController) CreateUser() {
 	u.ServeJSON()
 }
 
-
+// @router / [get]
 func (u *UserController) AllUser() {
 	db := models.GetDatabase()
 	var users []models.Usuario

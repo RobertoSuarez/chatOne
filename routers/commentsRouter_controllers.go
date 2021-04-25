@@ -72,7 +72,16 @@ func init() {
 
     beego.GlobalControllerRouter["chatOne/controllers:UserController"] = append(beego.GlobalControllerRouter["chatOne/controllers:UserController"],
         beego.ControllerComments{
-            Method: "UserOne",
+            Method: "CreateUser",
+            Router: "/",
+            AllowHTTPMethods: []string{"post"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["chatOne/controllers:UserController"] = append(beego.GlobalControllerRouter["chatOne/controllers:UserController"],
+        beego.ControllerComments{
+            Method: "AllUser",
             Router: "/",
             AllowHTTPMethods: []string{"get"},
             MethodParams: param.Make(),
@@ -81,8 +90,17 @@ func init() {
 
     beego.GlobalControllerRouter["chatOne/controllers:UserController"] = append(beego.GlobalControllerRouter["chatOne/controllers:UserController"],
         beego.ControllerComments{
+            Method: "UserOne",
+            Router: "/:iduser",
+            AllowHTTPMethods: []string{"get"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["chatOne/controllers:UserController"] = append(beego.GlobalControllerRouter["chatOne/controllers:UserController"],
+        beego.ControllerComments{
             Method: "UpdateUser",
-            Router: "/",
+            Router: "/:iduser",
             AllowHTTPMethods: []string{"put"},
             MethodParams: param.Make(),
             Filters: nil,
@@ -91,7 +109,7 @@ func init() {
     beego.GlobalControllerRouter["chatOne/controllers:UserController"] = append(beego.GlobalControllerRouter["chatOne/controllers:UserController"],
         beego.ControllerComments{
             Method: "DeleteUser",
-            Router: "/",
+            Router: "/:iduser",
             AllowHTTPMethods: []string{"delete"},
             MethodParams: param.Make(),
             Filters: nil,
