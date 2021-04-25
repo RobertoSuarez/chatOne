@@ -37,3 +37,6 @@ type Error struct {
 	Message string `json:"message"`
 }
 
+func SetError(is bool, msg string) Error {
+	return Error{is, msg}
+}

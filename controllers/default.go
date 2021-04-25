@@ -9,10 +9,5 @@ type MainController struct {
 }
 
 func (c *MainController) Get() {
-	c.Data["Email"] = "electrosonix12@gmail.com"
-	if c.GetSession("id") == nil {
-		c.SetSession("id", "electrosonix12@gmail.com")
-		c.Data["session"] = "Establecimos una session"
-	}
-	c.TplName = "home.html"
+	c.TplName = "index.html"
 }

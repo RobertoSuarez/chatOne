@@ -16,7 +16,16 @@ type UserController struct {
 // @router / [get]
 func (u *UserController) UserOne() {
 	iduser := u.GetString(":iduser")
-	u.Ctx.WriteString("Usuario: " + iduser)
+	var user models.Usuario
+	db := models.GetDatabase()
+	result := db.Where("id = ?", iduser).First(&user)
+	if result.Error != nil {
+		u.Data["json"] = models.SetError(true, result.Error.Error())
+		u.ServeJSON()
+	}
+
+	u.Data["json"] = user
+	u.ServeJSON()
 }
 
 // @router / [put]
@@ -70,6 +79,17 @@ func (u *UserController) CreateUser() {
 
 
 func (u *UserController) AllUser() {
-	u.Data["json"] = models.Usuarios
+	db := models.GetDatabase()
+	var users []models.Usuario
+	result := db.Find(&users)
+
+	if result.Error != nil {
+		logs.Error(result.Error)
+		u.Data["json"] = models.SetError(true, result.Error.Error())
+		u.ServeJSON()
+		return
+	}
+
+	u.Data["json"] = users
 	u.ServeJSON()
 }
