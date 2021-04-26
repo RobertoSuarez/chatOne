@@ -19,7 +19,7 @@ func init() {
 
 	// Migración de la base de datos
 	db := GetDatabase()
-	db.AutoMigrate(&Usuario{})
+	db.AutoMigrate(&Usuario{}, &Contacto{})
 	logs.Info("Migración completada")
 }
 
