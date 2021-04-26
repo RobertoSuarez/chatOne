@@ -34,6 +34,7 @@ func (u *UserController) UserOne() {
 		u.Data["json"] = user
 		u.ServeJSON()
 	case "user":
+		// si el usuario esta pidiendo su mismo id si se permite
 		if strings.EqualFold(fmt.Sprint(u.Ctx.Input.GetData("iduser")), iduser) {
 			result := getUser(db, iduser, &user)
 			if result.Error != nil {
