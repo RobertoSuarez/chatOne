@@ -3,11 +3,14 @@ package controllers
 import (
 	"chatOne/models"
 	"encoding/json"
+	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 type UserController struct {
@@ -18,11 +21,12 @@ type UserController struct {
 func (u *UserController) UserOne() {
 	iduser := u.GetString(":iduser")
 	var user models.Usuario
+	db := models.GetDatabase()
 
-	switch u.Ctx.Input.Header("Role") {
+	switch u.Ctx.Input.GetData("Role") {
 	case "admin":
-		db := models.GetDatabase()
-		result := db.Where("id = ?", iduser).First(&user)
+
+		result := getUser(db, iduser, &user)
 		if result.Error != nil {
 			u.Data["json"] = models.SetError(true, result.Error.Error())
 			u.ServeJSON()
@@ -30,10 +34,24 @@ func (u *UserController) UserOne() {
 		u.Data["json"] = user
 		u.ServeJSON()
 	case "user":
+		if strings.EqualFold(fmt.Sprint(u.Ctx.Input.GetData("iduser")), iduser) {
+			result := getUser(db, iduser, &user)
+			if result.Error != nil {
+				u.Data["json"] = models.SetError(true, result.Error.Error())
+				u.ServeJSON()
+			}
+			u.Data["json"] = user
+			u.ServeJSON()
+			return
+		}
 		u.Data["json"] = models.SetError(true, "user no permitido")
 		u.ServeJSON()
 	}
 
+}
+
+func getUser(db *gorm.DB, iduser string, user *models.Usuario) *gorm.DB {
+	return db.Where("id = ?", iduser).First(&user)
 }
 
 // @router /:iduser [put]
@@ -114,6 +132,11 @@ func (u *UserController) CreateUser() {
 
 // @router / [get]
 func (u *UserController) AllUser() {
+	if u.Ctx.Input.GetData("Role") == "user" {
+		u.Data["json"] = models.SetError(true, "no estas permitido")
+		u.ServeJSON()
+		return
+	}
 	db := models.GetDatabase()
 	var users []models.Usuario
 	result := db.Find(&users)
