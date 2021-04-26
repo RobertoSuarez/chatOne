@@ -55,7 +55,7 @@ func (l *LoginController) IniciarSession() {
 		return
 	}
 
-	validToken, err := GenerateJWT(authUser.Email, authUser.Role)
+	validToken, err := GenerateJWT(authUser.ID, authUser.Email, authUser.Role)
 	if err != nil {
 		l.Data["json"] = "Falla al generar el token"
 		l.ServeJSON()
@@ -70,10 +70,11 @@ func (l *LoginController) IniciarSession() {
 	l.ServeJSON()
 }
 
-func GenerateJWT(email, role string) (string, error) {
+func GenerateJWT(id uint, email, role string) (string, error) {
 	var mySigningKey = []byte(models.Secretkey)
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
+	claims["iduser"] = id
 	claims["authorized"] = true
 	claims["email"] = email
 	claims["role"] = role
@@ -138,9 +139,12 @@ func IsAuthorized(ctx *context.Context) {
 	if claimns, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		if claimns["role"] == "admin" {
 			ctx.Request.Header.Set("Role", "admin")
+			ctx.Input.SetData("Role", "admin")
+			ctx.Input.SetData("iduser", claimns["iduser"])
 			return
 		}else if claimns["role"] == "user" {
-			ctx.Request.Header.Set("Role", "user")
+			ctx.Input.SetData("Role", "user")
+			ctx.Input.SetData("iduser", claimns["iduser"])
 			return
 		}
 	}
