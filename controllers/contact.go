@@ -3,7 +3,9 @@ package controllers
 import (
 	"chatOne/models"
 	"encoding/json"
+	"strconv"
 
+	"github.com/beego/beego/v2/core/logs"
 	"github.com/beego/beego/v2/server/web"
 )
 
@@ -79,12 +81,52 @@ func (c *ContactController) OneContact() {
 
 // @router /:idcontact [delete]
 func (c *ContactController) DeleteContact() {
+	defer c.ServeJSON()
+	logs.Info("delete contacto")
 	iduser := c.GetString(":iduser")
-	_ = iduser
+	idcontacto, err := strconv.Atoi(c.GetString(":idcontact"))
+	if err != nil {
+		c.Data["json"] = models.SetError(true, err.Error())
+		return
+	}
+
+	db := models.GetDatabase()
+	var contacto models.Contacto
+	contacto.ID = uint(idcontacto)
+	result := db.Where("user_id = ? AND id = ?", iduser, idcontacto).Delete(&contacto)
+	if result.Error != nil {
+		c.Data["json"] = models.SetError(true, result.Error.Error())
+		return
+	}
+	c.Data["json"] = models.SetError(false, "El contacto ha sido eliminado")
 }
 
 // @router /:idcontact [put]
 func (c *ContactController) UpdateContact() {
-	iduser := c.GetString(":iduser")
-	_ = iduser
+	defer c.ServeJSON()
+
+	idcontacto, err := strconv.Atoi(c.GetString(":idcontact"))
+	if err != nil {
+		c.Data["json"] = models.SetError(true, err.Error())
+		return
+	}
+	var (
+		iduser = c.GetString(":iduser")
+		contacto models.Contacto
+		db = models.GetDatabase()
+	)
+	contacto.ID = uint(idcontacto)
+
+	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &contacto); err != nil {
+		c.Data["json"] = models.SetError(true, err.Error())
+		return
+	}
+
+	result := db.Model(models.Contacto{}).Where("user_id = ? AND id = ?", iduser, idcontacto).Omit("id").Updates(contacto)
+	if result.Error != nil {
+		c.Data["json"] = models.SetError(true, result.Error.Error())
+		return
+	}
+
+	c.Data["json"] = models.SetError(false, "Contacto actualizado")
 }
