@@ -114,9 +114,8 @@ func (u *UserController) CreateUser() {
 
 	var dbuser models.Usuario
 	db.Where("email = ?", user.Email).First(&dbuser)
-	logs.Info("Create user dbuser ", user)
 	if dbuser.Email != "" {
-		u.Data["json"] = "Email ya existe"
+		u.Data["json"] = models.SetError(true, "El usuario ya existe")
 		u.ServeJSON()
 		return
 	}
