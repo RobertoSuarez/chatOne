@@ -20,6 +20,7 @@ type LoginController struct {
 	web.Controller
 }
 
+
 // TODO: /login debe de resivir un json con las creadenciales,
 // y retornar un json con un token para que el js cree la cookies
 

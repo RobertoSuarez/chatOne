@@ -5,7 +5,9 @@ package routers
 
 import (
 	"chatOne/controllers"
+
 	beego "github.com/beego/beego/v2/server/web"
+	"github.com/beego/beego/v2/server/web/context"
 )
 
 func init() {
@@ -14,6 +16,19 @@ func init() {
 
 	// Restringido por las cookies
 	api := beego.NewNamespace("/api/v1",
+		// CORS
+		beego.NSBefore(func (ctx *context.Context) {
+			ctx.Output.Header("Access-Control-Allow-Origin", "*")
+			ctx.Output.Header("Access-Control-Allow-Methods", "*")
+			ctx.Output.Header("Access-Control-Allow-Headers", "*")
+			ctx.Output.Header("Content-Type", "application/json")
+
+			if ctx.Request.Method == "OPTIONS" {
+				ctx.ResponseWriter.WriteHeader(200)
+			}
+			return
+
+		}),
 
 		beego.NSBefore(controllers.IsAuthorized),	// filtro de token JWT
 
