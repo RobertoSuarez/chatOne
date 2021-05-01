@@ -1,6 +1,7 @@
 # archivos por ignorar
 bin/
 chatOne
+chatone1
 *.tmp
 tmp/
 *.db

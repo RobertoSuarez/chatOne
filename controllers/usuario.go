@@ -20,9 +20,20 @@ type UserController struct {
 // @router /:iduser [get]
 func (u *UserController) UserOne() {
 	iduser := u.GetString(":iduser")
+
 	var user models.Usuario
 	db := models.GetDatabase()
 
+	if iduser == "me" {
+		result := getUser(db, fmt.Sprint(u.Ctx.Input.GetData("iduser")), &user)
+		if result.Error != nil {
+			u.Data["json"] = models.SetError(true, result.Error.Error())
+			u.ServeJSON()
+		}
+		u.Data["json"] = user
+		u.ServeJSON()
+		return
+	}
 	switch u.Ctx.Input.GetData("Role") {
 	case "admin":
 
@@ -102,21 +113,23 @@ func (u *UserController) DeleteUser() {
 // @router / [post]
 func (u *UserController) CreateUser() {
 	db := models.GetDatabase()
-
+	msg := models.NewInfo()
+	u.Data["json"] = msg
+	defer u.ServeJSON()
 	var user models.Usuario
 	err := json.Unmarshal(u.Ctx.Input.RequestBody, &user)
 	if err != nil {
 		logs.Error(err.Error())
-		u.Data["json"] = err.Error()
-		u.ServeJSON()
+		// Error al leer los datos
+		msg.SetInfo(nil, true, err.Error())
 		return
 	}
 
 	var dbuser models.Usuario
 	db.Where("email = ?", user.Email).First(&dbuser)
 	if dbuser.Email != "" {
-		u.Data["json"] = models.SetError(true, "El usuario ya existe")
-		u.ServeJSON()
+		// el usuario ya esta registrado
+		msg.SetInfo(nil, true, "El usuario ya esta registrado")
 		return
 	}
 
@@ -126,8 +139,7 @@ func (u *UserController) CreateUser() {
 
 	// insertamos el usuario
 	db.Create(&user)
-	u.Data["json"] = user
-	u.ServeJSON()
+	msg.SetInfo(user, false, "El usuario se a creado correctamente")
 }
 
 // @router / [get]

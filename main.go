@@ -19,7 +19,6 @@ func main() {
 		beego.BConfig.Listen.HTTPPort = portint
 		beego.BConfig.Listen.HTTPSPort = portint
 	}
-
 	beego.Run()
 }
 

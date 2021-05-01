@@ -18,7 +18,7 @@ type Usuario struct {
 	Password string `json:"password"`
 	Number   string `json:"number"`
 	Email    string `gorm:"unique" json:"email"`
-	Role	string `json:"role"`
+	Role     string `json:"role"`
 }
 
 type Authentication struct {
@@ -33,7 +33,7 @@ type Token struct {
 }
 
 type Error struct {
-	IsError bool 	`json:"isError"`
+	IsError bool   `json:"isError"`
 	Message string `json:"message"`
 }
 
