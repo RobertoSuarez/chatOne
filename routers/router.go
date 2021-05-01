@@ -11,8 +11,8 @@ import (
 )
 
 func init() {
-    beego.Router("/", &controllers.MainController{})
 
+    beego.Router("/*", &controllers.MainController{})
 
 	// Restringido por las cookies
 	api := beego.NewNamespace("/api/v1",
