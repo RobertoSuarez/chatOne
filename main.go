@@ -14,7 +14,7 @@ func main() {
 	// beego.BConfig.WebConfig.Session.SessionProviderConfig = "tmp/"
 
 	// En la carpeta view se establese todo el dist de vue
-	beego.SetStaticPath("/static", "views/dist/static")
+	beego.SetStaticPath("/", "views/dist")
 	port := os.Getenv("PORT")
 	portint, err := strconv.Atoi(port)
 	if err == nil {
