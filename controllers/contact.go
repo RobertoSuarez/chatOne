@@ -14,7 +14,8 @@ type ContactController struct {
 	web.Controller
 }
 
-// @router / [get]
+// @Param	iduser	path	int	true	"id del usuario"
+// @router /:iduser/contacts [get]
 func (c *ContactController) AllContacts() {
 	db := models.GetDatabase()
 	var contactos []models.Contacto
@@ -31,10 +32,10 @@ func (c *ContactController) AllContacts() {
 	c.ServeJSON()
 }
 
-// @router / [post]
+// @router /:iduser/contacts [post]
 func (c *ContactController) CreateContact() {
 	var (
-		iduser = c.GetString(":iduser")
+		iduser = c.GetString(":iduser") // esto esta en el path
 		db = models.GetDatabase()
 		user models.Usuario
 		contacto models.Contacto
@@ -60,7 +61,7 @@ func (c *ContactController) CreateContact() {
 	c.ServeJSON()
 }
 
-// @router /:idcontact [get]
+// @router /:iduser/contacts/:idcontact [get]
 func (c *ContactController) OneContact() {
 	db := models.GetDatabase()
 	var (
@@ -79,7 +80,7 @@ func (c *ContactController) OneContact() {
 	c.ServeJSON()
 }
 
-// @router /:idcontact [delete]
+// @router /:iduser/contacts/:idcontact [delete]
 func (c *ContactController) DeleteContact() {
 	defer c.ServeJSON()
 	logs.Info("delete contacto")
@@ -101,7 +102,7 @@ func (c *ContactController) DeleteContact() {
 	c.Data["json"] = models.SetError(false, "El contacto ha sido eliminado")
 }
 
-// @router /:idcontact [put]
+// @router /:iduser/contacts/:idcontact [put]
 func (c *ContactController) UpdateContact() {
 	defer c.ServeJSON()
 

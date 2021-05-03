@@ -19,7 +19,7 @@ func init() {
     beego.GlobalControllerRouter["chatOne/controllers:ContactController"] = append(beego.GlobalControllerRouter["chatOne/controllers:ContactController"],
         beego.ControllerComments{
             Method: "AllContacts",
-            Router: "/",
+            Router: "/:iduser/contacts",
             AllowHTTPMethods: []string{"get"},
             MethodParams: param.Make(),
             Filters: nil,
@@ -28,7 +28,7 @@ func init() {
     beego.GlobalControllerRouter["chatOne/controllers:ContactController"] = append(beego.GlobalControllerRouter["chatOne/controllers:ContactController"],
         beego.ControllerComments{
             Method: "CreateContact",
-            Router: "/",
+            Router: "/:iduser/contacts",
             AllowHTTPMethods: []string{"post"},
             MethodParams: param.Make(),
             Filters: nil,
@@ -37,7 +37,7 @@ func init() {
     beego.GlobalControllerRouter["chatOne/controllers:ContactController"] = append(beego.GlobalControllerRouter["chatOne/controllers:ContactController"],
         beego.ControllerComments{
             Method: "OneContact",
-            Router: "/:idcontact",
+            Router: "/:iduser/contacts/:idcontact",
             AllowHTTPMethods: []string{"get"},
             MethodParams: param.Make(),
             Filters: nil,
@@ -46,7 +46,7 @@ func init() {
     beego.GlobalControllerRouter["chatOne/controllers:ContactController"] = append(beego.GlobalControllerRouter["chatOne/controllers:ContactController"],
         beego.ControllerComments{
             Method: "DeleteContact",
-            Router: "/:idcontact",
+            Router: "/:iduser/contacts/:idcontact",
             AllowHTTPMethods: []string{"delete"},
             MethodParams: param.Make(),
             Filters: nil,
@@ -55,7 +55,7 @@ func init() {
     beego.GlobalControllerRouter["chatOne/controllers:ContactController"] = append(beego.GlobalControllerRouter["chatOne/controllers:ContactController"],
         beego.ControllerComments{
             Method: "UpdateContact",
-            Router: "/:idcontact",
+            Router: "/:iduser/contacts/:idcontact",
             AllowHTTPMethods: []string{"put"},
             MethodParams: param.Make(),
             Filters: nil,
@@ -66,6 +66,33 @@ func init() {
             Method: "IniciarSession",
             Router: "/login",
             AllowHTTPMethods: []string{"post"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["chatOne/controllers:MessageController"] = append(beego.GlobalControllerRouter["chatOne/controllers:MessageController"],
+        beego.ControllerComments{
+            Method: "GetAll",
+            Router: "/:iduser/message",
+            AllowHTTPMethods: []string{"get"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["chatOne/controllers:MessageController"] = append(beego.GlobalControllerRouter["chatOne/controllers:MessageController"],
+        beego.ControllerComments{
+            Method: "Post",
+            Router: "/:iduser/message",
+            AllowHTTPMethods: []string{"post"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
+    beego.GlobalControllerRouter["chatOne/controllers:MessageController"] = append(beego.GlobalControllerRouter["chatOne/controllers:MessageController"],
+        beego.ControllerComments{
+            Method: "OneMessage",
+            Router: "/:iduser/message/:idmessage",
+            AllowHTTPMethods: []string{"get"},
             MethodParams: param.Make(),
             Filters: nil,
             Params: nil})

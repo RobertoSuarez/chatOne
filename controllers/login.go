@@ -112,6 +112,7 @@ func IsAuthorized(ctx *context.Context) {
 	logs.Info("Filtro del token: ", ctx.Input.URL())
 	// si se quiere logear se da permiso
 	if strings.Contains(ctx.Input.URL(), "/login") {
+		logs.Info("Pasamos el filtro de autorización")
 		return
 	}
 

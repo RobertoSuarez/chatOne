@@ -27,7 +27,7 @@ func init() {
 
 	// Migración de la base de datos
 	db := GetDatabase()
-	db.AutoMigrate(&Usuario{}, &Contacto{})
+	db.AutoMigrate(&Usuario{}, &Contacto{}, &Message{}, &Conversación{})
 }
 
 func GetDatabase() *gorm.DB {

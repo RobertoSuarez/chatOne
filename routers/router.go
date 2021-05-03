@@ -12,7 +12,7 @@ import (
 
 func init() {
 
-    beego.Router("/*", &controllers.MainController{})
+	//    beego.Router("/*", &controllers.MainController{})
 
 	// Restringido por las cookies
 	api := beego.NewNamespace("/api/v1",
@@ -37,16 +37,20 @@ func init() {
 		beego.NSNamespace("/users",
 			beego.NSInclude(
 				&controllers.UserController{}, // CRUD users
+				&controllers.MessageController{},
+				&controllers.ContactController{},
 			),
 
-			beego.NSNamespace("/:iduser/contacts",
-				beego.NSInclude(&controllers.ContactController{},	// CRUD contacts
-				),
-			),
+			// beego.NSNamespace("/:iduser/contacts",
+			// 	beego.NSInclude(&controllers.ContactController{},	// CRUD contacts
+			// 	),
+			// ),
+
 		),
 
+
 		// ws
-		beego.NSInclude(&controllers.ChatController{}),
+		//beego.NSInclude(&controllers.ChatController{}),
 
 	)
 
